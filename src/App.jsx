@@ -6,7 +6,7 @@ const Projects = () => {
 
   useEffect(() => {
     getProjects().then(data => {
-      console.log(data);  // راقبي البيانات
+      console.log(data); 
       setProjects(data);
     });
   }, []);
