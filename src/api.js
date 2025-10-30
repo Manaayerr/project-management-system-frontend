@@ -21,3 +21,17 @@ export const getProjects = async () => {
       throw error
     }
   };
+
+  export const loginUser = async (credentials) => {
+    try {
+        const response = await axios.post(`${API_BASE}/token/`, credentials); 
+        
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Login Error:", error.response.data);
+        throw error; 
+    }
+};
