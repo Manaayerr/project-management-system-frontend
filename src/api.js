@@ -8,5 +8,6 @@ export const getProjects = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching projects:", error);
+    return [];
   }
 };

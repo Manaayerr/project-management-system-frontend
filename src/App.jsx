@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { getProjects } from "./api";
+import React, { useEffect, useState } from "react"
+import { getProjects } from "./api"
 
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     getProjects().then(data => {
-      console.log(data); 
-      setProjects(data);
+      console.log(data) 
+      setProjects(data)
+      setIsLoading(false)
     });
   }, []);
 
+  if (isLoading){
+    return <h1>Loading Projects...</h1>
+  }
+
+  if (!projects || projects.length ===0){
+    return <h1>No projects found!</h1>
+  }
   return (
     <div>
       <h1>Projects</h1>
