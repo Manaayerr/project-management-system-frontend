@@ -11,3 +11,13 @@ export const getProjects = async () => {
     return [];
   }
 };
+
+  export const registerUser = async (userData) =>{
+    try{
+      const response = await axios.post(`$API_BASE/register/`, userData)
+      return response.data
+    }catch (error){
+      console.error('Registeration Error:', error.response.data)
+      throw error
+    }
+  };
