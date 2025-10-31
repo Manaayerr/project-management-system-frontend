@@ -30,7 +30,15 @@ export const getProjects = async () => {
         
         return response.data;
     } catch (error) {
-        console.error("Login Error:", error.response.data);
-        throw error; 
+        if (error.response) {
+            console.error("Login Error:", error.response.data);
+            throw error;
+        } else if (error.request) {
+            console.error("Network Error: Connection Refused or Timeout.");
+            throw new Error("Cannot connect to the server. Please check the backend connection.");
+        } else {
+            console.error("General Error:", error.message);
+            throw error;
+        }
     }
 };

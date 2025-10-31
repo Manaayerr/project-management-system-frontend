@@ -27,17 +27,31 @@ const ProjectsPage =() =>{
 
 
 if (isLoading){
-    return <h1>Loading Projects...</h1>
+    return <h1>Loading Projects...</h1>
+}
+
+if (!projects || projects.length === 0) {
+    return (
+        <div>
+            <h1>Projects Dashboard</h1>
+            <p>No projects found. Start by creating a new one!</p>
+        </div>
+    );
 }
 
 
-    return (
-    <div>
-    <h1>Projects Dashboard</h1>
-
-    </div>
-    );
+    return (
+    <div>
+        <h1>Projects Dashboard</h1>
+        <ul>
+            {projects.map(project => (
+                <li key={project.id}>
+                    {project.title} 
+                </li>
+            ))}
+        </ul>
+    </div>
+    );
 };
 
-export default ProjectsPage; 
-    
+export default ProjectsPage;

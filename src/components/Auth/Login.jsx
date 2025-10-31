@@ -26,8 +26,12 @@ const Login = ({ history, setIsAuthenticated }) => {
             alert('Login successful!');
 
         } catch (err) {
-            setError('Login failed. Check your username and password.');
-            console.error(err);
+        if (err.message === "Cannot connect to the server. Please check the backend connection.") {
+            setError(err.message);
+        } else {
+    setError('Login failed. Check your username and password.');
+        }
+console.error(err);
         }
     };
 
