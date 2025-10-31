@@ -1,35 +1,47 @@
-import React, { useEffect, useState } from "react"
-import { getProjects } from "./api"
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import ProjectsPage from './pages/ProjectsPage'; 
+
+const checkAuth = () => {
+    return !!localStorage.getItem('access_token');
+};
+
+const PrivateRoute = ({ element: Element, isAuthenticated, ...rest }) => {
+    return isAuthenticated ? <Element {...rest} /> : <Navigate to="/login" replace />;
+};
 
 const Projects = () => {
-  const [projects, setProjects] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+    return <h1>Welcome to Projects Dashboard! (Data Fetching Logic Goes Here)</h1>;
+};
 
-  useEffect(() => {
-    getProjects().then(data => {
-      console.log(data) 
-      setProjects(data)
-      setIsLoading(false)
-    });
-  }, []);
+const App = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(checkAuth());
+    
 
-  if (isLoading){
-    return <h1>Loading Projects...</h1>
-  }
+    return (
+        <Router>
+            <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+            <div style={{ padding: '20px' }}>
+                <Routes>
+                    <Route path="/" element={<h1>Welcome to the Project Management System! Please Log In or Register.</h1>} />
+                    
+                    <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                    <Route path="/register" element={<Register />} />
 
-  if (!projects || projects.length ===0){
-    return <h1>No projects found!</h1>
-  }
-  return (
-    <div>
-      <h1>Projects</h1>
-      <ul>
-        {projects.map(project => (
-          <li key={project.id}>{project.title}</li>
-        ))}
-      </ul>
-    </div>
-  );
+                    <Route 
+                path="/projects" 
+                element={<PrivateRoute element={ProjectsPage} isAuthenticated={isAuthenticated} />} // 👈 استخدام ProjectsPage
+            />
+
+                    {/* To add  Task ,Kanban later   */}
+
+                </Routes>
+            </div>
+        </Router>
+    );
 };
 
 export default App;
