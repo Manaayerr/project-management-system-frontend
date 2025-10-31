@@ -1,10 +1,9 @@
-import axios from 'axios';
-
-const API_BASE = "http://127.0.0.1:8000/api";
+import axiosInstance from "./api/axiosInstance";
+// const API_BASE = "http://127.0.0.1:8000/api";
 
 export const getProjects = async () => {
   try {
-    const response = await axios.get(`${API_BASE}/projects/`);
+    const response = await axiosInstance.get(`projects/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching projects:", error);
@@ -14,7 +13,7 @@ export const getProjects = async () => {
 
   export const registerUser = async (userData) =>{
     try{
-      const response = await axios.post(`$API_BASE/register/`, userData)
+      const response = await axiosInstance.post(`register/`, userData)
       return response.data
     }catch (error){
       console.error('Registeration Error:', error.response.data)
@@ -24,7 +23,7 @@ export const getProjects = async () => {
 
   export const loginUser = async (credentials) => {
     try {
-        const response = await axios.post(`${API_BASE}/token/`, credentials); 
+        const response = await axiosInstance.post(`token/`, credentials); 
         
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
