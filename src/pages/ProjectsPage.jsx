@@ -40,18 +40,20 @@ if (!projects || projects.length === 0) {
 }
 
 
-    return (
-    <div>
-        <h1>Projects Dashboard</h1>
-        <ul>
-            {projects.map(project => (
-                <li key={project.id}>
-                    {project.title} 
-                </li>
-            ))}
-        </ul>
-    </div>
-    );
+  return (
+    <div>
+    <h1>Projects Dashboard</h1>
+    <ul>
+        {projects.map(project => (
+            <li key={project.id}>
+                <Link to={`/projects/${project.id}`}>
+                    {project.title}
+                </Link>
+            </li>
+        ))}
+    </ul>
+    </div>
+    );
 };
 
 export default ProjectsPage;

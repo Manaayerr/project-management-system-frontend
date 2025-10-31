@@ -40,5 +40,16 @@ export const getProjects = async () => {
             console.error("General Error:", error.message);
             throw error;
         }
-    }
+        
+      } 
 };
+export const getProjectDetails = async (projectId) => {
+    try {
+        // نقطة النهاية في Django هي /api/projects/{id}/
+        const response = await axiosInstance.get(`projects/${projectId}/`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching project ${projectId} details:`, error);
+        throw error;
+    }
+  };
