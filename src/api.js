@@ -45,7 +45,6 @@ export const getProjects = async () => {
 };
 export const getProjectDetails = async (projectId) => {
     try {
-        // نقطة النهاية في Django هي /api/projects/{id}/
         const response = await axiosInstance.get(`projects/${projectId}/`);
         return response.data;
     } catch (error) {
@@ -53,3 +52,43 @@ export const getProjectDetails = async (projectId) => {
         throw error;
     }
   };
+
+  export const getProjectsTasks = async (projectId) => {
+  try {
+        const response = await axiosInstance.get(`/projects/${projectId}/tasks/`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching project tasks:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const createTask = async (projectId,taskData) => {
+  try{
+    const dataToSend = {...taskData, project_id: projectId}
+    const response = await axiosInstance.post (`/projects/${projectId}/tasks/`, dataToSend)
+    return response.data
+  }catch(error){
+    console.error('Error creating task: ', error.response?.data || error.message)
+    throw error
+  }
+}
+
+export const updateTask = async (projectId,taskId,taskData) =>{
+  try{
+    const response = await axiosInstance.put (`/projects/${projectId}/tasks/${taskId}/`, taskData)
+    return response.data
+  }catch(error){
+    console.error('Error uodating task: ', error.response?.data || error.message)
+    throw error
+  }
+}
+
+export const deleteTask = async (projectId,taskId) => {
+  try{
+    await axiosInstance.delete(`/projects/${projectId}/tasks/${taskId}/`)
+  }catch(error){
+    console.error('Error deleting task: ', error.response?.data || error.message)
+    throw error
+  }
+}
