@@ -53,6 +53,21 @@ export const getProjectDetails = async (projectId) => {
     }
   };
 
+  export const getAllUsers = async () => {
+    try {
+        const response = await axiosInstance.get(`/profiles/`);
+        
+        return response.data.map(profile => ({
+            id: profile.user.id, 
+            username: profile.user.username,
+        }));
+        
+    } catch (error) {
+        console.error("Error fetching users:", error.response?.data || error.message);
+        return []; 
+    }
+};
+
   export const getProjectsTasks = async (projectId) => {
   try {
         const response = await axiosInstance.get(`/projects/${projectId}/tasks/`);
