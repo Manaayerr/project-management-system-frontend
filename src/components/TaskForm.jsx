@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createTask, getAllUsers } from "../api";
 
-const TaskForm =({projectId, onTaskCreated}) => {
-    const [taskData,setTaskData] = useState({
+const TaskForm = ({ projectId, onTaskCreated }) => {
+    const [taskData, setTaskData] = useState({
         title: '',
-        status: 'todo', 
+        status: 'todo',
         due_date: '',
         assigned_to_id: '',
     });
@@ -12,12 +12,11 @@ const TaskForm =({projectId, onTaskCreated}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-        
-                const usersList = await getAllUsers(); 
+                const usersList = await getAllUsers();
                 setUsers(usersList);
             } catch (err) {
                 console.error("Failed to fetch users:", err);
@@ -27,7 +26,7 @@ const TaskForm =({projectId, onTaskCreated}) => {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target; 
         setTaskData({ ...taskData, [name]: value });
     };
 
@@ -36,11 +35,17 @@ const TaskForm =({projectId, onTaskCreated}) => {
         setError(null);
         setLoading(true);
 
+        const dataToSend = { ...taskData };
+
+        if (dataToSend.assigned_to_id === '') {
+            dataToSend.assigned_to_id = null; 
+        }
+
         try {
-            const newTask = await createTask(projectId, taskData);
-            
-            onTaskCreated(newTask); 
-            
+            const newTask = await createTask(projectId, dataToSend);
+
+            onTaskCreated(newTask);
+
             setTaskData({
                 title: '',
                 status: 'todo',
@@ -48,7 +53,7 @@ const TaskForm =({projectId, onTaskCreated}) => {
                 assigned_to_id: '',
             });
         } catch (err) {
-            setError('Failed to create task. Check required fields.');
+            setError('Failed to create task. Check required fields or user assignment.');
             console.error("Creation Error:", err);
         } finally {
             setLoading(false);
@@ -60,7 +65,7 @@ const TaskForm =({projectId, onTaskCreated}) => {
             <h3>Add New Task</h3>
             <form onSubmit={handleSubmit}>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                
+
                 <input
                     type="text"
                     name="title"
@@ -69,20 +74,20 @@ const TaskForm =({projectId, onTaskCreated}) => {
                     placeholder="Task Title"
                     required
                 />
-                
+
                 <input
                     type="date"
                     name="due_date"
                     value={taskData.due_date}
                     onChange={handleChange}
                 />
-                
+
                 <select name="status" value={taskData.status} onChange={handleChange}>
                     <option value="todo">To Do</option>
                     <option value="in_progress">In Progress</option>
                     <option value="done">Done</option>
                 </select>
-                
+
                 <select name="assigned_to_id" value={taskData.assigned_to_id} onChange={handleChange}>
                     <option value="">Assign To...</option>
                     {users.map(user => (

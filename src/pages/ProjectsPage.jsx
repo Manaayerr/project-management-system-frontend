@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { getProjects } from "../api";
-import { useNavigate, Link } from "react-router-dom"; 
+import { Link,useNavigate } from "react-router-dom"; 
 
 const ProjectsPage =() =>{
     const [projects, setProjects] = useState(null)
