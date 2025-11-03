@@ -23,6 +23,7 @@ const TaskForm =({projectId, onTaskCreated}) => {
                 console.error("Failed to fetch users:", err);
             }
         };
+        fetchUsers()
     }, []);
 
     const handleChange = (e) => {

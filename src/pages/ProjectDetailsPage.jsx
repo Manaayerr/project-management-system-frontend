@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectDetails, getProjectsTasks,deleteTask } from '../api'; 
+import TaskForm from '../components/TaskForm';
 
 const ProjectDetailsPage = () => {
     const { id } = useParams(); 
@@ -9,7 +10,9 @@ const ProjectDetailsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [tasks, setTasks] = useState([])
+
     const fetchProjectAndTasks = async () => {
+        setIsLoading(true)
         try{
             const [projectData, taskData] = await Promise.all([
                 getProjectDetails(id),
@@ -45,25 +48,7 @@ const ProjectDetailsPage = () => {
     }
 
     useEffect(() => {
-        fetchProjectAndTasks()
-        setIsLoading(true);
-        getProjectDetails(id)
-            .then(data => {
-                setProject(data);
-                setIsLoading(false);
-            },[id])
-            .catch(err => {
-                setIsLoading(false);
-                if (err.response && err.response.status === 401) {
-                    localStorage.removeItem('access_token');
-                    localStorage.removeItem('refresh_token');
-                    navigate('/login');
-                } else if (err.response && err.response.status === 404) {
-                    setError('Project not found.');
-                } else {
-                    setError('Failed to load project details.');
-                }
-            });
+        fetchProjectAndTasks() 
     }, [id, navigate]); 
 
     if (isLoading) {
@@ -84,25 +69,31 @@ const ProjectDetailsPage = () => {
             <p><strong>ID:</strong> {project.id}</p>
             <p><strong>Description:</strong> {project.description || 'No description provided.'}</p>
             <hr />
-            <h2>Poject Tasks ({tasks.length})</h2>
+            
+            
+            <TaskForm 
+                projectId={id} 
+                onTaskCreated={fetchProjectAndTasks} 
+            />
 
-            {/* Task form here later */}
+            <h2>Project Tasks ({tasks.length})</h2> 
+
             <div className='task-list'>
-                {tasks.length>0 ?(
+                {tasks.length > 0 ? (
                     <ul>
-                        {tasks.map(task =>(
+                        {tasks.map(task => (
                             <li key={task.id} className={`task-item task-${task.status}`}>
                                 <strong>{task.title}</strong>
                                 <span>Status: {task.status}</span>
                                 <span>Due: {task.due_date}</span>
                                 <span>Assigned to: **{task.assigned_to ? task.assigned_to.username : 'Unassigned'}**</span>
                                 <button onClick={() => handleTaskDelete(task.id)} className="delete-btn">
-                                    
+                                    X Delete
                                 </button>
                             </li>
                         ))}
                     </ul>
-                ): (
+                ) : (
                     <p>No tasks found for this project. Start by adding one!</p>
                 )}
             </div>
