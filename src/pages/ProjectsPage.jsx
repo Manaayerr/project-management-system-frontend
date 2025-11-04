@@ -48,24 +48,20 @@ if (!projects || projects.length === 0) {
 
 
 return (
-    // 🟢 استخدام حاوية Bulma مع تباعد
     <div className="container is-max-desktop p-4"> 
         <h1 className="title is-2 mb-4" style={{ color: 'var(--color-dark-text)' }}>Projects Dashboard</h1>
         
-        {/* نموذج إضافة المشروع */}
         <div className="box has-background-white p-5 mb-5" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.05)' }}>
             <ProjectForm onProjectCreated={handleProjectCreated} />
         </div>
 
         <h2 className="subtitle is-3 mb-4" style={{ color: 'var(--color-primary-purple)' }}>My Projects</h2>
         
-        {/* قائمة المشاريع */}
         <div className="list-group">
             {projects.map(project => (
                 <Link 
                     to={`/projects/${project.id}`} 
                     key={project.id}
-                    // 🟢 تصميم عناصر القائمة كبطاقات نظيفة
                     className="box has-background-white p-4 mb-3 is-flex is-justify-content-space-between is-align-items-center"
                     style={{ borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
                 >

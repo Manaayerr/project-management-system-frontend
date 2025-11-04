@@ -21,12 +21,12 @@ const App = () => {
             <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
             <div style={{ padding: '20px' }}>
                 <Routes>
-                  <Route 
+                    <Route 
         path="/" 
         element={
             isAuthenticated 
-                ? <Navigate to="/projects" replace /> // ✅ موثق؟ اذهب للمشاريع
-                : <h1>Welcome to the Project Management System! Please Log In or Register.</h1> // ❌ غير موثق؟ ابق هنا
+                ? <Navigate to="/projects" replace /> 
+                : <h1>Welcome to the Project Management System! Please Log In or Register.</h1> 
         } 
     />
 
@@ -39,7 +39,6 @@ const App = () => {
     </Route>
                     
 
-                    {/* To add  Task ,Kanban later   */}
 
                 </Routes>
             </div>

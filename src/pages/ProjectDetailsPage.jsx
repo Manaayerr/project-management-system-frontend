@@ -1,100 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getProjectDetails, getProjectsTasks,deleteTask } from '../api'; 
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getProjectDetails, getProjectsTasks, deleteTask } from '../api'; 
+import TaskItem from '../components/TaskItem';
 import TaskForm from '../components/TaskForm';
 
 const ProjectDetailsPage = () => {
     const { id } = useParams(); 
-    const navigate = useNavigate();
-    const [project, setProject] = useState(null);
+    const [projectDetails, setProjectDetails] = useState(null);
+    const [projectTasks, setProjectTasks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [tasks, setTasks] = useState([])
-
-    const fetchProjectAndTasks = async () => {
-        setIsLoading(true)
-        try{
-            const [projectData, taskData] = await Promise.all([
-                getProjectDetails(id),
-                getProjectsTasks(id)
-            ])
-            setProject(projectData)
-            setTasks(taskData)
-        }catch (err){
-            if(err.response && err.response.status === 401){
-                localStorage.removeItem('access_token')
-                localStorage.removeItem('refresh_token')
-                navigate('/login')
-            }else if (err.response && err.response.status === 404){
-                setError('Project Not Found')
-            }else{
-                setError('Failed to load project details or tasks')
-            }
-        }finally{
-            setIsLoading(false)
-        }
-    }
-
-    const handleTaskDelete = async (taskId) =>{
-        const confirmed = window.confirm('Are you sure you want to delete this task?')
-        if(confirmed){
-            try{
-                await deleteTask(id,taskId)
-                setTasks(tasks.filter(task => task.id !== taskId))
-            }catch (error){
-                alert('Failed to delete task. check console for details')
-            }
-        }
-    }
 
     useEffect(() => {
-        fetchProjectAndTasks() 
-    }, [id, navigate]); 
+        const fetchData = async () => {
+            try {
+                const details = await getProjectDetails(id);
+                setProjectDetails(details);
+
+                const tasks = await getProjectsTasks(id);
+                setProjectTasks(tasks);
+
+            } catch (err) {
+                setError("Failed to fetch project details or tasks.");
+                console.error("Fetch error:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [id]);
+    
+    const handleStatusUpdated = (updatedTask) => {
+        setProjectTasks(prevTasks => 
+            prevTasks.map(task => 
+                task.id === updatedTask.id ? updatedTask : task
+            )
+        );
+    };
+
+    const handleDeleteTask = async (taskId) => {
+        if (window.confirm("Are you sure you want to delete this task?")) {
+            try {
+                await deleteTask(id, taskId);
+                setProjectTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+            } catch (err) {
+                console.error("Deletion failed:", err);
+                alert("Failed to delete the task.");
+            }
+        }
+    };
+    
+    const handleTaskCreated = (newTask) => {
+        setProjectTasks(prevTasks => [...prevTasks, newTask]);
+    };
 
     if (isLoading) {
-        return <h1 className="loading">Loading Project Details...</h1>;
+        return <div className="container p-5"><p className="has-text-info">Loading...</p></div>;
     }
 
     if (error) {
-        return <h1 style={{color: 'red'}}>{error}</h1>;
+        return <div className="container p-5"><p className="notification is-danger">{error}</p></div>;
     }
 
-    if (!project) {
-        return <h1>Project data is missing.</h1>;
+    if (!projectDetails) {
+        return <div className="container p-5"><p className="notification is-warning">Project not found.</p></div>;
     }
 
-    return (
-        <div className="project-details-container">
-            <h1>Project: {project.title}</h1>
-            <p><strong>ID:</strong> {project.id}</p>
-            <p><strong>Description:</strong> {project.description || 'No description provided.'}</p>
-            <hr />
+   return (
+        <div className="container is-max-desktop p-4">
+            <h1 className="title is-2 mb-2" style={{ color: 'var(--color-dark-text)' }}>
+                Project: {projectDetails.title}
+            </h1>
+            <p className="subtitle is-6 mb-4 has-text-grey">
+                ID: {projectDetails.id} | Description: {projectDetails.description}
+            </p>
             
             
-            <TaskForm 
-                projectId={id} 
-                onTaskCreated={fetchProjectAndTasks} 
-            />
+            <div className="box has-background-white p-5 mb-5" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.05)' }}>
+                <TaskForm projectId={id} onTaskCreated={handleTaskCreated} /> 
+            </div>
 
-            <h2>Project Tasks ({tasks.length})</h2> 
-
-            <div className='task-list'>
-                {tasks.length > 0 ? (
-                    <ul>
-                        {tasks.map(task => (
-                            <li key={task.id} className={`task-item task-${task.status}`}>
-                                <strong>{task.title}</strong>
-                                <span>Status: {task.status}</span>
-                                <span>Due: {task.due_date}</span>
-                                <span>Assigned to: **{task.assigned_to ? task.assigned_to.username : 'Unassigned'}**</span>
-                                <button onClick={() => handleTaskDelete(task.id)} className="delete-btn">
-                                    X Delete
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+            
+            <h3 className="title is-4 mb-4" style={{ color: 'var(--color-dark-text)' }}>Project Tasks ({projectTasks.length})</h3>
+            
+            <div className="task-list">
+                {projectTasks.length > 0 ? (
+                    projectTasks.map(task => (
+                        <TaskItem 
+                            key={task.id} 
+                            task={task} 
+                            projectId={id} 
+                            onDelete={handleDeleteTask} 
+                            onStatusUpdated={handleStatusUpdated} 
+                        />
+                    ))
                 ) : (
-                    <p>No tasks found for this project. Start by adding one!</p>
+                    <p className="notification is-info is-light">No tasks yet for this project. Start adding one!</p>
                 )}
             </div>
         </div>
