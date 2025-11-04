@@ -13,27 +13,43 @@ const Navbar = ({isAuthenticated, setIsAuthenticated}) => {
         navigate('/login');
     }
 
-    return (
-        <nav style={{ padding: '10px 20px', background: '#333', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
-            <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>
-                Project Manager
-            </Link>
-            <div>
-                {isAuthenticated ? (
-                    <>
-                        <Link to="/projects" style={{ color: 'white', textDecoration: 'none', marginRight: '15px' }}>Projects</Link>
-                        <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
-                            Logout
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <Link to="/login" style={{ color: 'white', textDecoration: 'none', marginRight: '15px' }}>
-                            Sign in 
-                        </Link>
-                        <Link to="/register" style={{ color: 'white', textDecoration: 'none' }}>Register</Link>
-                    </>
-                )}
+  return (
+        <nav className="navbar is-white" role="navigation" aria-label="main navigation"
+             // خلفية بيضاء مع ظل خفيف
+             style={{ boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }} 
+        >
+            <div className="navbar-brand">
+                <Link className="navbar-item" to="/" 
+                      // 🟢 شعار بنفسجي
+                      style={{ color: 'var(--color-primary-purple)', fontWeight: 'bold', fontSize: '1.4em' }}>
+                    Project Manager
+                </Link>
+            </div>
+
+            <div id="navbarBasicExample" className="navbar-menu is-active">
+                <div className="navbar-start">
+                    <Link className="navbar-item" to="/projects" 
+                          // 🟢 تنسيق الروابط
+                          style={{ color: 'var(--color-dark-text)' }}>
+                        Projects
+                    </Link>
+                </div>
+
+                <div className="navbar-end">
+                    <div className="navbar-item">
+                        <div className="buttons">
+                            {/* زر تسجيل الخروج */}
+                            <button className="button is-light is-danger" onClick={handleLogout}
+                                    style={{ 
+                                        backgroundColor: 'var(--color-red-accent)', 
+                                        color: 'white', 
+                                        fontWeight: 'bold' 
+                                    }}>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     );

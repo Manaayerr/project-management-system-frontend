@@ -1,15 +1,15 @@
 import axiosInstance from "./api/axiosInstance";
 // const API_BASE = "http://127.0.0.1:8000/api";
 
-export const createProject = async (projectData =>{
-  try{
-    const response = await axiosInstance.post(`/projects`,projectData)
-    return response.data
-  }catch(error){
-    console.error('Error creating project:' error.response?.data || error.message)
-    throw error
-  }
-})
+export const createProject = async (projectData) => { 
+    try {
+        const response = await axiosInstance.post(`projects/`, projectData);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating project:', error.response?.data || error.message);
+        throw error;
+    }
+};
 
 export const getProjects = async () => {
   try {
