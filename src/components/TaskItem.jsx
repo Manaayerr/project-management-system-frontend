@@ -7,7 +7,6 @@ const STATUS_CHOICES = [
     { value: 'done', label: 'Done' },
 ];
 
-// ✅ Status color logic
 const getStatusColor = (status) => {
     switch (status) {
         case 'todo': return '#da3232ff';
@@ -21,7 +20,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
     const [currentStatus, setCurrentStatus] = useState(task.status);
     const [isLoading, setIsLoading] = useState(false);
 
-    // ✅ Edit task states
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState(task.title);
     const [newAssignedTo, setNewAssignedTo] = useState(task.assigned_to?.username || '');
@@ -50,7 +48,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
         }
     };
 
-    // ✅ Save edit
     const handleSaveEdit = async () => {
         setIsLoading(true);
         try {
@@ -73,7 +70,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
 
     return (
         <>
-        {/* ✅ Task Card */}
         <div 
             className="box has-background-white p-4 mb-3 is-flex is-justify-content-space-between is-align-items-center"
             style={{ 
@@ -100,7 +96,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
                     Due: {task.due_date} | Assigned to: {task.assigned_to?.username || 'Unassigned'}
                 </span>
 
-                {/* ✅ Edit button */}
                 <button 
                     className="button is-info is-small is-outlined mr-2" 
                     onClick={() => setIsEditing(true)}
@@ -108,7 +103,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
                     Edit
                 </button>
 
-                {/* ✅ Delete */}
                 <button 
                     className="button is-danger is-small is-outlined" 
                     onClick={() => onDelete(task.id)}
@@ -119,7 +113,6 @@ const TaskItem = ({ task, projectId, onDelete, onStatusUpdated }) => {
             </div>
         </div>
 
-        {/* ✅ Edit Modal */}
         {isEditing && (
             <div className="modal is-active">
                 <div className="modal-background"></div>

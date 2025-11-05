@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
     }
 });
 
-// Request Interceptor لإضافة الـ Access Token
 axiosInstance.interceptors.request.use(config => {
     const token = localStorage.getItem('access_token');
     if (token) {
@@ -20,14 +19,13 @@ axiosInstance.interceptors.request.use(config => {
     return config;
 }, error => Promise.reject(error));
 
-// Response Interceptor لتجديد التوكن تلقائيًا
 axiosInstance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true; // منع حلقة لا نهائية
+            originalRequest._retry = true; 
             const refreshToken = localStorage.getItem('refresh_token');
 
             if (refreshToken) {
@@ -43,7 +41,6 @@ axiosInstance.interceptors.response.use(
 
                     return axiosInstance(originalRequest);
                 } catch (err) {
-                    // فشل التجديد => تسجيل خروج المستخدم
                     localStorage.removeItem('access_token');
                     localStorage.removeItem('refresh_token');
                     localStorage.removeItem('username');
