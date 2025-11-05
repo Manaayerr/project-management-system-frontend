@@ -11,7 +11,7 @@ const Navbar = ({isAuthenticated}) => {
         <div className="navbar-brand">
             <Link className="navbar-item" to="/" 
                 style={{ color: 'var(--color-primary-purple)', fontWeight: 'bold', fontSize: '1.4em' }}>
-                Project Manager
+                Project Managment
             </Link>
         </div>
 

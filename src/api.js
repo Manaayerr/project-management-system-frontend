@@ -100,15 +100,20 @@ export const createTask = async (projectId,taskData) => {
   }
 }
 
-export const updateTask = async (projectId,taskId,taskData) =>{
-  try{
-    const response = await axiosInstance.put (`/projects/${projectId}/tasks/${taskId}/`, taskData)
-    return response.data
-  }catch(error){
-    console.error('Error uodating task: ', error.response?.data || error.message)
-    throw error
+export const updateTask = async (projectId, taskId, taskData) => {
+  try {
+    const response = await axiosInstance.put(
+      `/projects/${projectId}/tasks/${taskId}/`,
+      { ...taskData, project_id: projectId } // ✅ add project_id
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating task: ', error.response?.data || error.message);
+    throw error;
   }
-}
+};
+
+
 
 export const deleteTask = async (projectId,taskId) => {
   try{

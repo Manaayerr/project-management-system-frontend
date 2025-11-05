@@ -68,12 +68,14 @@ const ProjectDetailsPage = () => {
 
    return (
         <div className="container is-max-desktop p-4">
-            <h1 className="title is-2 mb-2" style={{ color: 'var(--color-dark-text)' }}>
-                Project: {projectDetails.title}
-            </h1>
-            <p className="subtitle is-6 mb-4 has-text-grey">
-                ID: {projectDetails.id} | Description: {projectDetails.description}
-            </p>
+  <h1 className="title is-2 mb-2" style={{ color: 'var(--color-dark-text)' }}>
+    {projectDetails.title}
+  </h1>
+
+ <p className="subtitle is-6 mb-4" style={{ color: '#666', fontStyle: 'italic' }}>
+  {projectDetails.description}
+</p>
+
             
             
             <div className="box has-background-white p-5 mb-5" style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.05)' }}>

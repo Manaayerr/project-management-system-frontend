@@ -7,6 +7,8 @@ import ProjectsPage from './pages/ProjectsPage';
 import PrivateRoute from './utils/PrivateRoute'; 
 import ProjectDetailsPage from './pages/ProjectDetailsPage';
 
+
+
 const checkAuth = () => {
     return !!localStorage.getItem('access_token');
 };
@@ -43,7 +45,7 @@ const App = () => {
                                                 href="/login" 
                                                 style={{
                                                     padding: '12px 24px',
-                                                    background: '#4c3aff',
+                                                    background: '#c26ee9ff',
                                                     color: 'white',
                                                     borderRadius: '8px',
                                                     textDecoration: 'none',
